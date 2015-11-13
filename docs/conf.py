@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'oscar.flag'
-copyright = u'2015, Oscar Engineering'
+copyright = u'2015, Mulberry Health Inc.'
 author = u'Oscar Engineering'
 
 # The version info for the project you're documenting, acts as replacement for
