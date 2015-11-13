@@ -48,7 +48,6 @@ setuptools.setup(
     },
     scripts=[],
     zip_safe=True,
-    setup_require=[],
     extras_require={
         'test': 'pytest',
     },
