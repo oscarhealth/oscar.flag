@@ -1,0 +1,9 @@
+docs/_build
+.DS_Store
+.cache
+.tox
+*.pyc
+oscar.flag.egg-info
+
+build/
+dist/
