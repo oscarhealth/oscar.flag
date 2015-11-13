@@ -14,7 +14,7 @@ qualified module path.
 
 Documentation lives at `Read the Docs
 <https://oscarflag.readthedocs.org/>`_, the code on `GitHub
-<https://github.com/oscarhealth/oscar.flag>_`.
+<https://github.com/oscarhealth/oscar.flag>`_.
 
 Example
 =======
