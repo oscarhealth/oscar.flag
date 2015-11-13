@@ -19,8 +19,7 @@ Documentation lives at `Read the Docs
 Example
 =======
 
-.. code-block:: python
-   :caption: application entry point
+Application entry-point::
 
    import sys
    from oscar import flag
@@ -40,8 +39,7 @@ Example
            FLAGS.some_int,
            other_module.multiply_by(FLAGS.some_int))
 
-.. code-block:: python
-   :caption: other_module.py
+other_module.py::
 
    from oscar import flag
 
@@ -51,8 +49,7 @@ Example
    def multiply_by(i):
        return i * FLAGS.multiplier
 
-.. code-block:: shell
-   :caption: Usage
+shell::
 
    $ python example.py
    Missing required flags:
