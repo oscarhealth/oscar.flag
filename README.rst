@@ -14,13 +14,12 @@ qualified module path.
 
 Documentation lives at `Read the Docs
 <https://oscarflag.readthedocs.org/>`_, the code on `GitHub
-<https://github.com/oscarhealth/oscar.flag>_`.
+<https://github.com/oscarhealth/oscar.flag>`_.
 
 Example
 =======
 
-.. code-block:: python
-   :caption: application entry point
+Application entry-point::
 
    import sys
    from oscar import flag
@@ -40,8 +39,7 @@ Example
            FLAGS.some_int,
            other_module.multiply_by(FLAGS.some_int))
 
-.. code-block:: python
-   :caption: other_module.py
+other_module.py::
 
    from oscar import flag
 
@@ -51,8 +49,7 @@ Example
    def multiply_by(i):
        return i * FLAGS.multiplier
 
-.. code-block:: shell
-   :caption: Usage
+shell::
 
    $ python example.py
    Missing required flags:
