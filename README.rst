@@ -12,6 +12,10 @@ Flags are declared where they are used in an application or library,
 and they are accessed through a namespace matching their fully
 qualified module path.
 
+Documentation lives at `Read the Docs
+<https://oscarflag.readthedocs.org/>`_, the code on `GitHub
+<https://github.com/oscarhealth/oscar.flag>_`.
+
 Example
 =======
 

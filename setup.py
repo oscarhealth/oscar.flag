@@ -17,6 +17,7 @@ setuptools.setup(
     license='Apache Software License 2.0',
     long_description=read('README.rst'),
     version=VERSION,
+    url='https://github.com/oscarhealth/oscar.flag',
     namespace_packages=['oscar'],
     author='Oscar Engineering',
     author_email='open-source+oscar.flag@hioscar.com',
