@@ -96,11 +96,11 @@ class GlobalFlagSet(object):
             try:
                 _ = self.find_short(name)
             except KeyError:
-                out.write('    -%s.%s=%s: %s\n' % (
-                    namespace, name, var.default, var.description))
+                out.write('    -%s.%s=%s: %s (%s)\n' % (
+                    namespace, name, var.default, var.description, var.type_str))
             else:
-                out.write('    [%s.]%s=%s: %s\n' % (
-                    namespace, name, var.default, var.description))
+                out.write('    [%s.]%s=%s: %s (%s)\n' % (
+                    namespace, name, var.default, var.description, var.type_str))
 
     def write_flags_long(self, out):
         '''Prints all flag usage to ``out``.
@@ -314,6 +314,7 @@ class Var(object):
     '''Base of all flag accessors.'''
 
     value = UNSET
+    type_str = 'Unknown'
 
     def __init__(self, description, default=None, secure=False):
         '''Create a new Var flag accessor.
@@ -341,6 +342,8 @@ class String(Var):
 
     '''String-valued flag.'''
 
+    type_str = 'String'
+
     def set(self, value):
         self.value = value
 
@@ -348,6 +351,8 @@ class String(Var):
 class Int(Var):
 
     '''Integer-valued flag.'''
+
+    type_str = 'Int'
 
     def set(self, value):
         self.value = int(value)
@@ -357,6 +362,8 @@ class Float(Var):
 
     '''Float-valued flag.'''
 
+    type_str = 'Float'
+
     def set(self, value):
         self.value = float(value)
 
@@ -364,6 +371,8 @@ class Float(Var):
 class Bool(Var):
 
     '''Boolean-valued flag.'''
+
+    type_str = 'Bool'
 
     def set(self, value):
         if value.lower() in ('t', 'true', 'yes', 'on', '1'):
@@ -377,6 +386,8 @@ class Bool(Var):
 class List(Var):
 
     '''Flag that is a list of another flag type.'''
+
+    type_str = 'List[_]'
 
     def __init__(self, inner_type, separator, description, default=None, secure=False):
         '''Create a list flag of `inner_type`.
@@ -397,6 +408,7 @@ class List(Var):
         super(List, self).__init__(description, default, secure)
         self.separator = separator
         self.inner_value = inner_type(description, default, secure)
+        self.type_str = 'List[%s]' % self.inner_value.type_str
 
     def set(self, value):
         '''
