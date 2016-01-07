@@ -11,6 +11,7 @@ class _Required(object):
 
 REQUIRED = _Required()
 UNSET = object()
+INDENT = '    '
 
 
 def default_usage(globalflags):
@@ -96,11 +97,14 @@ class GlobalFlagSet(object):
             try:
                 _ = self.find_short(name)
             except KeyError:
-                out.write('    -%s.%s=%s: %s (%s)\n' % (
+                out.write(INDENT + '-%s.%s=%s: %s (%s)\n' % (
                     namespace, name, var.default, var.description, var.type_str))
             else:
-                out.write('    [%s.]%s=%s: %s (%s)\n' % (
+                out.write(INDENT + '[%s.]%s=%s: %s (%s)\n' % (
                     namespace, name, var.default, var.description, var.type_str))
+            if hasattr(var, 'long_description'):
+                for line in var.long_description.splitlines():
+                    out.write(INDENT + INDENT + line + '\n')
 
     def write_flags_long(self, out):
         '''Prints all flag usage to ``out``.
