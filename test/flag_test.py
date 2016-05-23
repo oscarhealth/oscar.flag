@@ -1,7 +1,8 @@
 # pylint: disable=C0103
 import base64
-import io
 import unittest
+
+import six
 
 from oscar import flag
 
@@ -93,9 +94,10 @@ class EnvironmentTest(unittest.TestCase):
         self.FLAGS = flag.GlobalFlagSet()
 
     def test_all(self):
+        SECRET_BYTES = b'secret_sauce'
         args = [
             ('foo', 'bar'), ('doesnotexist', 'baz'), ('foo.bar', 'blah'),
-            ('SECURED_SETTING_SECRET', base64.encodestring('secret_sauce'))]
+            ('SECURED_SETTING_SECRET', base64.encodestring(SECRET_BYTES))]
         flags = self.FLAGS.namespace(__name__)
         foo_flags = self.FLAGS.namespace('foo')
         flags.foo = flag.String("foo string")
@@ -104,7 +106,7 @@ class EnvironmentTest(unittest.TestCase):
         self.FLAGS.parse_environment(args)
         self.assertEqual(flags.foo, 'bar')
         self.assertEqual(foo_flags.bar, 'blah')
-        self.assertEqual(flags.SECRET, 'secret_sauce')
+        self.assertEqual(flags.SECRET, SECRET_BYTES)
         self.assertEqual(self.FLAGS.get(__name__, 'SECRET').secure, True)
 
 
@@ -114,7 +116,7 @@ class IniTest(unittest.TestCase):
         self.FLAGS = flag.GlobalFlagSet()
 
     def test_all(self):
-        fp = io.BytesIO("""
+        fp = six.StringIO("""
 [foo]
 bar = 1.23
 baz = hello world
@@ -130,7 +132,7 @@ truefalse = no
         self.assertFalse(flags.truefalse)
 
     def test_bad_ini(self):
-        fp = io.BytesIO("""
+        fp = six.StringIO("""
 [doesnotexist]
 blah = blah
 """)

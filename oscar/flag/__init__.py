@@ -1,7 +1,8 @@
 # pylint: disable=W0621
 import base64
-import ConfigParser
 import sys
+
+from six.moves import configparser
 
 
 class _Required(object):
@@ -259,7 +260,7 @@ class GlobalFlagSet(object):
 
         :type file_p: file
         '''
-        config = ConfigParser.ConfigParser()
+        config = configparser.ConfigParser()
         config.readfp(file_p)
         for section in config.sections():
             for name, value in config.items(section):
