@@ -1,8 +1,8 @@
 import datetime
-import StringIO
 import unittest
 
 from dateutil import tz
+import six
 
 from oscar import flag
 from oscar.flag import contrib
@@ -48,7 +48,7 @@ class ChoicesTest(unittest.TestCase):
         flagset = flag.GlobalFlagSet()
         flags = flagset.namespace('test')
         flags.choices = contrib.Choices(flag.Int, 'pick a number', [1, 2, 3], 1)
-        out = StringIO.StringIO()
+        out = six.StringIO()
         flagset.write_flags(out, 'test')
         self.assertEqual(out.getvalue(), (
             '    [test.]choices=1: pick a number (Int)\n' +
