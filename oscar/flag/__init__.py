@@ -240,7 +240,7 @@ class GlobalFlagSet(object):
                     namespace, name = '.'.join(parts[:-1]), parts[-1]
                 flag = self.get(namespace, name)
                 flag.set(value)
-                flag.secure = secure
+                flag.secure = flag.secure or secure
             except KeyError:
                 # Ignore environment variables that don't map to a setting.
                 pass
@@ -261,6 +261,9 @@ class GlobalFlagSet(object):
         :type file_p: file
         '''
         config = configparser.ConfigParser()
+        # Need to set optionxform to `str` so that ConfigParser will be case
+        # sensitive in its parsing of section headers and keys
+        config.optionxform = str
         config.readfp(file_p)
         for section in config.sections():
             for name, value in config.items(section):
@@ -297,11 +300,26 @@ class NamespaceFlagSet(object):
         if name in self._flags:
             if isinstance(value, Var):
                 raise FlagException('%s was already defined' % name)
-            self._flags[name].set(value)
+            if value is UNSET:
+                flag_obj = self._flags[name]
+                try:
+                    del flag_obj.value
+                except AttributeError:
+                    # No-op unsetting an unset flag.
+                    pass
+            else:
+                self._flags[name].set(value)
         else:
             if not isinstance(value, Var):
                 raise FlagException('%s is not a flag.Var' % name)
             self._flags[name] = value
+
+    def __dir__(self):
+        '''Returns all flag attributes declared in the namespace.
+
+        :rtype: list[str]
+        '''
+        return list(self.__dict__.keys()) + list(self._flags.keys())
 
 
 class FlagException(Exception):
@@ -347,6 +365,10 @@ class String(Var):
 
     '''String-valued flag.'''
 
+    def __init__(self, description, default=None, secure=False):
+        """ :rtype: str """
+        super(String, self).__init__(description, default, secure)
+
     type_str = 'String'
 
     def set(self, value):
@@ -356,6 +378,10 @@ class String(Var):
 class Int(Var):
 
     '''Integer-valued flag.'''
+
+    def __init__(self, description, default=None, secure=False):
+        """ :rtype: int """
+        super(Int, self).__init__(description, default, secure)
 
     type_str = 'Int'
 
@@ -367,6 +393,10 @@ class Float(Var):
 
     '''Float-valued flag.'''
 
+    def __init__(self, description, default=None, secure=False):
+        """ :rtype: float """
+        super(Float, self).__init__(description, default, secure)
+
     type_str = 'Float'
 
     def set(self, value):
@@ -376,6 +406,10 @@ class Float(Var):
 class Bool(Var):
 
     '''Boolean-valued flag.'''
+
+    def __init__(self, description, default=None, secure=False):
+        """ :rtype: bool """
+        super(Bool, self).__init__(description, default, secure)
 
     type_str = 'Bool'
 
@@ -408,6 +442,7 @@ class List(Var):
         :type description: str
         :type default: list or None or _Required
         :type secure: bool
+        :rtype: list
         '''
         default = [] if default is None else default
         super(List, self).__init__(description, default, secure)

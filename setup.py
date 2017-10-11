@@ -3,7 +3,7 @@ import os
 import setuptools
 
 
-VERSION = '0.1.1'
+VERSION = '0.1.2'
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -52,6 +52,7 @@ setuptools.setup(
         'six>=1.0.0',
     ],
     extras_require={
-        'test': 'pytest',
+        'test': ['pytest', 'mock'],
     },
+    tests_require=['pytest', 'mock'],
 )

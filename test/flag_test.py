@@ -87,6 +87,16 @@ class CommandLineTest(unittest.TestCase):
         self.assertEqual(flags.bar, 0.90)
         self.assertEqual(other_flags.bar, 1.80)
 
+    def test_unset(self):
+        flags = self.FLAGS.namespace('foo')
+        flags.bar = flag.List(flag.Int, ',', 'list of ints', [1])
+        flags.bar = "1,2"
+        flags.bar = flag.UNSET
+        self.assertEqual([1], flags.bar)
+        # Make sure this is a Noop
+        flags.bar = flag.UNSET
+        self.assertEqual([1], flags.bar)
+
 
 class EnvironmentTest(unittest.TestCase):
 
@@ -121,15 +131,18 @@ class IniTest(unittest.TestCase):
 bar = 1.23
 baz = hello world
 truefalse = no
+LARGEST_INT_KNOWN_TO_MAN = 22
 """)
         flags = self.FLAGS.namespace('foo')
         flags.bar = flag.Float("some float")
         flags.baz = flag.String("some string")
         flags.truefalse = flag.Bool("some bool")
+        flags.LARGEST_INT_KNOWN_TO_MAN = flag.Int("a big number")
         self.FLAGS.parse_ini(fp)
         self.assertEqual(flags.bar, 1.23)
         self.assertEqual(flags.baz, "hello world")
         self.assertFalse(flags.truefalse)
+        self.assertEqual(flags.LARGEST_INT_KNOWN_TO_MAN, 22)
 
     def test_bad_ini(self):
         fp = six.StringIO("""
@@ -170,3 +183,16 @@ class FlagTypeTest(unittest.TestCase):
         self.assertEqual(var.get(), [])
         var.set("1,2,3,4,5")
         self.assertEqual(var.get(), [1, 2, 3, 4, 5])
+
+
+class NamespaceFlagSetTest(unittest.TestCase):
+
+    def setUp(self):
+        self.global_flags = flag.GlobalFlagSet()
+        self.flags = self.global_flags.namespace('test')
+
+    def test_dir(self):
+        self.flags.foo = flag.String('Some string')
+        self.flags.bar = flag.String('Another string')
+
+        self.assertEqual(dir(self.flags), ['_flags', 'bar', 'foo'])
