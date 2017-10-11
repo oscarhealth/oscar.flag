@@ -8,4 +8,6 @@ The :py:mod:`oscar.flag.contrib` contains additional non-core
 functionality. This module may introduce optional dependencies for
 usage.
 
-.. autoclass:: Datetime
+.. automodule:: oscar.flag.contrib
+   :members:
+   :undoc-members:
