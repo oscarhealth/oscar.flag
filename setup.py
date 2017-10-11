@@ -3,7 +3,7 @@ import os
 import setuptools
 
 
-VERSION = '0.1.0'
+VERSION = '0.1.1'
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 
